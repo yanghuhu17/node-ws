@@ -1,166 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoWorld - Make Earth Greener</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dota Arena — 英雄对决</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#0b0f13;
+      --card:#0f1720;
+      --accent:#8bd35f;
+      --muted:#9aa6ad;
+      --glass: rgba(255,255,255,0.03);
+      --maxw:1100px;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#071018 0%, #07151a 100%);color:#e6eef1;}
+    .wrap{width:92%;max-width:var(--maxw);margin:0 auto;padding:2rem 0}
 
-        body {
-            background: #f2fff5;
-            color: #284d30;
-        }
+    header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand i{font-size:1.6rem;color:var(--accent)}
+    .brand h1{font-size:1.2rem;margin:0}
+    nav a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    nav a:hover{color:var(--accent)}
 
-        header {
-            background: #2e7d32;
-            padding: 1rem 2rem;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-        }
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center;margin-top:1rem}
+    .hero-left h2{font-size:2.2rem;margin-bottom:.6rem}
+    .hero-left p{color:var(--muted);line-height:1.6}
+    .hero-cta{margin-top:1.2rem}
+    .btn{background:var(--accent);color:#071018;padding:10px 16px;border-radius:8px;font-weight:600;border:none;cursor:pointer}
+    .hero-right{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:1rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .patch{font-size:.9rem;color:var(--muted)}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    /* Filters */
+    .filters{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
+    .chip{padding:.45rem .8rem;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.02);cursor:pointer;color:var(--muted)}
+    .chip.active{background:linear-gradient(90deg, rgba(139,211,95,0.12), rgba(85,180,60,0.06));color:var(--accent);border-color:rgba(139,211,95,0.2)}
 
-        nav a {
-            color: white;
-            margin-left: 1rem;
-            text-decoration: none;
-            font-weight: 500;
-        }
+    /* Hero grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+    .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(2,6,10,0.6);transition:transform .18s}
+    .card:hover{transform:translateY(-6px)}
+    .thumb{height:130px;border-radius:8px;overflow:hidden;background:#000}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:.7rem}
+    .meta .role{font-size:.8rem;color:var(--muted);background:rgba(255,255,255,0.03);padding:.3rem .5rem;border-radius:6px}
+    .card h3{margin:.6rem 0 0;font-size:1.05rem}
+    .card p{color:var(--muted);font-size:.9rem;margin:.4rem 0}
+    .small{font-size:.85rem;color:var(--muted)}
 
-        .hero {
-            height: 70vh;
-            background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470') center/cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 2rem;
-        }
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(4,8,12,0.6);z-index:40}
+    .modal.open{display:flex}
+    .modal-card{width:96%;max-width:900px;background:linear-gradient(180deg,#071017,#0b1316);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,0.04)}
+    .modal-body{display:grid;grid-template-columns:320px 1fr;gap:1rem}
+    .hero-big{border-radius:8px;overflow:hidden;height:100%;min-height:220px}
+    .hero-info h2{margin:0}
+    .close{background:transparent;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer}
 
-        .hero h1 {
-            font-size: 3rem;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
-        }
+    /* footer */
+    footer{margin-top:2.2rem;padding:2rem 0;color:var(--muted);text-align:center}
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-        }
-
-        .section {
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .card:hover { transform: translateY(-8px); }
-
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-
-        .card h3 { padding: 1rem; color: #2e7d32; }
-
-        .card p { padding: 0 1rem 1.5rem; color: #333; }
-
-        .cta {
-            background: #2e7d32;
-            padding: 4rem 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .cta button {
-            background: white;
-            color: #2e7d32;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 30px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        footer {
-            background: #1b5e20;
-            padding: 2rem;
-            text-align: center;
-            color: white;
-        }
-    </style>
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;}
+      .modal-body{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
     <header>
-        <div class="logo">EcoWorld</div>
-        <nav>
-            <a href="#hero">Home</a>
-            <a href="#projects">Projects</a>
-            <a href="#join">Join</a>
-        </nav>
+      <div class="brand">
+        <i class="fas fa-dragon"></i>
+        <div>
+          <h1>Dota Arena</h1>
+          <div style="font-size:.76rem;color:var(--muted)">战术与英雄百科</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#heroes">英雄</a>
+        <a href="#items">装备</a>
+        <a href="#guide">攻略</a>
+      </nav>
     </header>
 
-    <section class="hero" id="hero">
-        <div>
-            <h1>Together For a Greener Tomorrow</h1>
-            <p>Act today to protect the Earth for future generations</p>
+    <section class="hero">
+      <div class="hero-left">
+        <h2>掌握英雄，主宰战场</h2>
+        <p>精选 DOTA 英雄数据库、核心物品与对线/团战小窍门。浏览英雄卡片，按角色筛选，点击查看详细技能与出装建议。</p>
+        <div class="hero-cta">
+          <button class="btn" id="quickJoin">快速开始</button>
         </div>
+      </div>
+      <aside class="hero-right">
+        <div class="patch">版本：Patch 7.35 — 更新：2025-11-14</div>
+        <div style="margin-top:1rem">
+          <strong>今日焦点</strong>
+          <p class="small" style="margin-top:.6rem;color:var(--muted)">斧王（Axe）在近几轮天赋+物品调整后眼见强势回归，适合打前排并制造混乱。</p>
+        </div>
+      </aside>
     </section>
 
-    <section class="section" id="projects">
-        <h2>Our Projects</h2>
-        <p>Explore how we are making the planet cleaner and greener.</p>
-        <div class="grid">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e" />
-                <h3>Tree Planting</h3>
-                <p>Rebuilding forests worldwide to restore biodiversity.</p>
-            </div>
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" />
-                <h3>Ocean Rescue</h3>
-                <p>Cleaning marine habitats and reducing plastic waste.</p>
-            </div>
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231" />
-                <h3>Renewable Energy</h3>
-                <p>Promoting solar and wind power adoption.</p>
-            </div>
-        </div>
-    </section>
+    <!-- Filters -->
+    <div style="margin-top:1.2rem">
+      <div class="filters" id="filters">
+        <div class="chip active" data-role="all">全部</div>
+        <div class="chip" data-role="carry">Carry</div>
+        <div class="chip" data-role="support">Support</div>
+        <div class="chip" data-role="offlane">Offlane</div>
+        <div class="chip" data-role="mid">Mid</div>
+      </div>
 
-    <section class="cta" id="join">
-        <h2>Join the Movement</h2>
-        <p>Every person counts. Be part of global environmental transformation.</p>
-        <button>Become a Member</button>
-    </section>
+      <!-- Hero Grid -->
+      <div class="grid" id="heroGrid">
+        <!-- Card example, more cards below -->
+        <div class="card" data-role="carry" data-hero="Juggernaut">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1601758123927-2c9b6d0a2a0b?auto=format&fit=crop&w=1200&q=80" alt="Juggernaut"></div>
+          <div class="meta"><span class="role">Carry</span><span class="small">近战</span></div>
+          <h3>主宰者（Juggernaut）</h3>
+          <p class="small">优秀的推线与生存能力，强力大招能改变团战走向。</p>
+          <div style="display:flex;gap:.5rem;margin-top:.6rem">
+            <button class="btn" style="padding:.4rem .7rem;font-size:.9rem" onclick="openModal(this)">查看</button>
+            <button class="chip" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">加入收藏</button>
+          </div>
+        </div>
+
+        <div class="card" data-role="support" data-hero="Crystal Maiden">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1200&q=80" alt="Crystal Maiden"></div>
+          <div class="meta"><span class="role">Support</span><span class="small">远程</span></div>
+          <h3>水晶室女（Crystal Maiden）</h3>
+          <p class="small">强回复与控制，提供团队法力恢复与抗压能力。</p>
+          <div style="display:flex;gap:.5rem;margin-top:.6rem">
+            <button class="btn" style="padding:.4rem .7rem;font-size:.9rem" onclick="openModal(this)">查看</button>
+            <button class="chip" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">加入收藏</button>
+          </div>
+        </div>
+
+        <div class="card" data-role="offlane" data-hero="Axe">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&fit=crop&w=1200&q=80" alt="Axe"></div>
+          <div class="meta"><span class="role">Offlane</span><span class="small">近战</span></div>
+          <h3>斧王（Axe）</h3>
+          <p class="small">强开团先手，能吸收大量伤害并扰乱敌阵。</p>
+          <div style="display:flex;gap:.5rem;margin-top:.6rem">
+            <button class="btn" style="padding:.4rem .7rem;font-size:.9rem" onclick="openModal(this)">查看</button>
+            <button class="chip" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">加入收藏</button>
+          </div>
+        </div>
+
+        <div class="card" data-role="mid" data-hero="Invoker">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1533055640609-24b498df3b3d?auto=format&fit=crop&w=1200&q=80" alt="Invoker"></div>
+          <div class="meta"><span class="role">Mid</span><span class="small">远程</span></div>
+          <h3>祈求者（Invoker）</h3>
+          <p class="small">复杂且高技能上限的法师，控制与爆发能力出色。</p>
+          <div style="display:flex;gap:.5rem;margin-top:.6rem">
+            <button class="btn" style="padding:.4rem .7rem;font-size:.9rem" onclick="openModal(this)">查看</button>
+            <button class="chip" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">加入收藏</button>
+          </div>
+        </div>
+
+        <div class="card" data-role="support" data-hero="Dazzle">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=1200&q=80" alt="Dazzle"></div>
+          <div class="meta"><span class="role">Support</span><span class="small">远程</span></div>
+          <h3>达兹（Dazzle）</h3>
+          <p class="small">强力治疗与位移，能在关键时刻拯救队友。</p>
+          <div style="display:flex;gap:.5rem;margin-top:.6rem">
+            <button class="btn" style="padding:.4rem .7rem;font-size:.9rem" onclick="openModal(this)">查看</button>
+            <button class="chip" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">加入收藏</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <footer>
-        © 2025 EcoWorld. All rights reserved.
+      <div>© 2025 Dota Arena — 本页面为静态演示，用于学习和展示</div>
     </footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <strong id="modalTitle">英雄名</strong>
+        <button class="close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="hero-big" id="modalImg"><img src="" style="width:100%;height:100%;object-fit:cover;border-radius:8px"/></div>
+        </div>
+        <div class="hero-info">
+          <h2 id="modalHero">英雄名</h2>
+          <p id="modalRole" class="small">角色 • 近战/远程</p>
+          <h4 style="margin-top:1rem">简要介绍</h4>
+          <p id="modalDesc" class="small">英雄描述</p>
+          <h4 style="margin-top:1rem">推荐出装</h4>
+          <p id="modalBuild" class="small">物品 A → 物品 B → 核心物品</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Filter chips
+    const chips = document.querySelectorAll('.chip[data-role]');
+    const cards = document.querySelectorAll('.card');
+
+    chips.forEach(chip => chip.addEventListener('click', () => {
+      chips.forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      const role = chip.getAttribute('data-role');
+      filter(role);
+    }));
+
+    function filter(role){
+      cards.forEach(card => {
+        if(role === 'all' || card.getAttribute('data-role') === role){
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Modal functions
+    function openModal(btn){
+      const card = btn.closest('.card');
+      const hero = card.getAttribute('data-hero');
+      const title = card.querySelector('h3').innerText;
+      const imgSrc = card.querySelector('.thumb img').src;
+      const role = card.querySelector('.role').innerText;
+      const desc = card.querySelector('p.small').innerText;
+
+      document.getElementById('modalTitle').innerText = hero;
+      document.getElementById('modalHero').innerText = title;
+      document.getElementById('modalImg').querySelector('img').src = imgSrc;
+      document.getElementById('modalRole').innerText = role;
+      document.getElementById('modalDesc').innerText = desc + '（更详细的技能和连招可以在完整版站点查阅）';
+      document.getElementById('modalBuild').innerText = '相位 -> 战鼓 -> 黑皇杖（示例）';
+
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+    // Quick start button scroll
+    document.getElementById('quickJoin').addEventListener('click', ()=>{
+      document.getElementById('filters').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    // Close modal on background click
+    document.getElementById('modal').addEventListener('click', (e)=>{
+      if(e.target === document.getElementById('modal')) closeModal();
+    });
+  </script>
 </body>
 </html>
